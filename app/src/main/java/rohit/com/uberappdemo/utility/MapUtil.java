@@ -1,27 +1,7 @@
 package rohit.com.uberappdemo.utility;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
-import com.google.maps.android.PolyUtil;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import rohit.com.uberappdemo.data.DirectionApiResponse;
-
-import static rohit.com.uberappdemo.utility.Constants.LAT;
-import static rohit.com.uberappdemo.utility.Constants.LEGS;
-import static rohit.com.uberappdemo.utility.Constants.LNG;
-import static rohit.com.uberappdemo.utility.Constants.POINTS;
-import static rohit.com.uberappdemo.utility.Constants.POLYLINE;
-import static rohit.com.uberappdemo.utility.Constants.ROUTES;
-import static rohit.com.uberappdemo.utility.Constants.STEPS;
 import static rohit.com.uberappdemo.utility.Constants.URL_DIRECTION_API;
 
 public class MapUtil {
@@ -37,10 +17,7 @@ public class MapUtil {
         // Destination of route
         String strDestination = "destination=" + dest.latitude + "," + dest.longitude;
 
-        String sensor = "sensor=false";
-        String mode = "mode=driving";
         // Building the parameters to the web service
-        //String parameters = strOrigin + "&" + strDestination + "&" + sensor + "&" + mode;
         String parameters = strOrigin + "&" + strDestination;
 
         // Output format

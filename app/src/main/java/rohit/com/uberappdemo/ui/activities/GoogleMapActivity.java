@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
@@ -27,11 +26,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import rohit.com.uberappdemo.ui.BaseActivity;
 import rohit.com.uberappdemo.R;
-import rohit.com.uberappdemo.interfaces.IGetDataCallBack;
 import rohit.com.uberappdemo.data.DirectionApiResponse;
+import rohit.com.uberappdemo.interfaces.IGetDataCallBack;
 import rohit.com.uberappdemo.presenter.MapActivityPresenter;
+import rohit.com.uberappdemo.ui.BaseActivity;
 import rohit.com.uberappdemo.utility.MapUtil;
 import rohit.com.uberappdemo.utility.NotificationUtil;
 
@@ -176,7 +175,7 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
         // Added Car icon as carMarker.
         carMarker = uberMap.addMarker(new MarkerOptions().position(latLongs.get(i))
                 .flat(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car_90)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car)));
         carMarker.setPosition(latLongs.get(i));
 
         final TimerTask task = new TimerTask() {
@@ -186,7 +185,7 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
                     public void run() {
                         try {
                             ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 100);
-                            valueAnimator.setDuration(2000);
+                            valueAnimator.setDuration(5000);
                             valueAnimator.setInterpolator(new LinearInterpolator());
                             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                 @Override
@@ -225,6 +224,6 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
             }
         };
 
-        timer.schedule(task, 1000, 1000); // Schedule the task.
+        timer.schedule(task, 1000, 3000); // Schedule the task.
     }
 }
