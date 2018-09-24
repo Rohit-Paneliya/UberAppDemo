@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.SquareCap;
 
 import org.json.JSONObject;
 
@@ -150,6 +151,8 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
                         }
 
                         if (lineOptions != null) {
+                            lineOptions.startCap(new SquareCap());
+                            lineOptions.endCap(new SquareCap());
                             mMap.addPolyline(lineOptions);
                             animateCarOnMap(points);
                         } else {
@@ -173,6 +176,8 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void animateCarOnMap(final List<LatLng> latLngs) {
 
+        System.out.println("---------" + latLngs.toString());
+
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (LatLng latLng : latLngs) {
             builder.include(latLng);
@@ -183,11 +188,11 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         //if (emission == 1) {
         marker = mMap.addMarker(new MarkerOptions().position(latLngs.get(0))
                 .flat(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car_90)));
         //}
         marker.setPosition(latLngs.get(0));
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
-        valueAnimator.setDuration(1000);
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 100);
+        valueAnimator.setDuration(2000);
         valueAnimator.setInterpolator(new LinearInterpolator());
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
