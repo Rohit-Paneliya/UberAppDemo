@@ -95,7 +95,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
                     DirectionApiCall.getDirectionDataFromAPI(url, new IGetDataCallBack() {
                         @Override
                         public void onSuccess(String data) {
-                            observableParceToJson(data);
+                            observableParseToJson(data);
                         }
 
                         @Override
@@ -110,37 +110,35 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 
-    private void animateCarOnMap(final List<LatLng> latLngs) {
+    private void animateCarOnMap(final List<LatLng> latLongs) {
 
         final Handler handler = new Handler();
         Timer gpsTrackTimer = new Timer();
 
         i = 0;
 
-        System.out.println("---------" + latLngs.toString());
-
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (LatLng latLng : latLngs) {
+        for (LatLng latLng : latLongs) {
             builder.include(latLng);
         }
         LatLngBounds bounds = builder.build();
         CameraUpdate mCameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 2);
         mMap.animateCamera(mCameraUpdate);
 
-        marker = mMap.addMarker(new MarkerOptions().position(latLngs.get(i))
+        marker = mMap.addMarker(new MarkerOptions().position(latLongs.get(i))
                 .flat(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car_90)));
 
-        marker.setPosition(latLngs.get(i));
+        marker.setPosition(latLongs.get(i));
 
-        TimerTask task = new TimerTask() {
+        final TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 handler.post(new Runnable() {
                     public void run() {
                         try {
-                            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 10000);
-                            valueAnimator.setDuration(10000);
+                            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 5000);
+                            valueAnimator.setDuration(5000);
                             valueAnimator.setInterpolator(new LinearInterpolator());
                             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                 @Override
@@ -148,36 +146,38 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
                                     v = valueAnimator.getAnimatedFraction();
 
                                     if (i > 2)
-                                        if (i <= latLngs.size()) {
-                                            double lng = v * latLngs.get(i - 1).longitude + (1 - v)
-                                                    * latLngs.get(i - 2).longitude;
-                                            double lat = v * latLngs.get(i - 1).latitude + (1 - v)
-                                                    * latLngs.get(i - 2).latitude;
+                                        if (i <= latLongs.size()) {
+                                            double lng = v * latLongs.get(i - 1).longitude + (1 - v)
+                                                    * latLongs.get(i - 2).longitude;
+                                            double lat = v * latLongs.get(i - 1).latitude + (1 - v)
+                                                    * latLongs.get(i - 2).latitude;
                                             LatLng newPos = new LatLng(lat, lng);
                                             marker.setPosition(newPos);
                                             marker.setAnchor(0.5f, 0.5f);
-                                            marker.setRotation(MapUtil.getBearing(latLngs.get(i - 1), newPos));
+                                            marker.setRotation(MapUtil.getBearing(latLongs.get(i - 1), newPos));
                                             mMap.animateCamera(CameraUpdateFactory.newLatLng(newPos));
 
                                         } else {
+                                            valueAnimator.cancel();
                                             cancel();
+                                            NotificationUtil.showNotification(GoogleMapActivity.this, GoogleMapActivity.class, "UberAppDemo", "You have reached destination successfully.");
                                         }
                                     i++;
                                 }
                             });
                             valueAnimator.start();
                         } catch (Exception e) {
-                            // error, do something
                             e.printStackTrace();
                         }
                     }
                 });
             }
         };
+
         gpsTrackTimer.schedule(task, 1000, 5000);
     }
 
-    private void observableParceToJson(String s) {
+    private void observableParseToJson(String s) {
         Observable.just(MapUtil.parseToJSON(s))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -220,10 +220,8 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
                             mMap.addPolyline(lineOptions);
                             animateCarOnMap(points);
                         } else {
-                            Toast.makeText(GoogleMapActivity.this, "Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GoogleMapActivity.this, "Couldn't get the data from an API.", Toast.LENGTH_SHORT).show();
                         }
-
-
                     }
 
                     @Override
