@@ -1,4 +1,4 @@
-package rohit.com.uberappdemo;
+package rohit.com.uberappdemo.network;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -9,9 +9,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import rohit.com.uberappdemo.interfaces.IGetDataCallBack;
+
 public class DirectionApiCall {
 
-    public static void getDirectionDataFromAPI(String url, final IGetDataCallBack iGetDataCallBack) {
+    /*
+    *   This function is using HttpURLConnection to fetch the data from Google Direction API using AsyncTask.
+    * */
+
+    public static void getDirectionDataFromAPI(String url, final IGetDataCallBack<String> iGetDataCallBack) {
 
         class DownloadTask extends AsyncTask<String, Void, String> {
             @Override
@@ -29,7 +35,7 @@ public class DirectionApiCall {
 
                         iStream = urlConnection.getInputStream();
                         BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-                        StringBuffer sb = new StringBuffer();
+                        StringBuilder sb = new StringBuilder();
 
                         String line = "";
                         while ((line = br.readLine()) != null) {
@@ -38,7 +44,7 @@ public class DirectionApiCall {
                         data = sb.toString();
                         br.close();
                     } catch (Exception e) {
-                        Log.d("Exception", e.toString());
+                        e.printStackTrace();
                     } finally {
                         if (iStream != null) {
                             iStream.close();
@@ -49,7 +55,7 @@ public class DirectionApiCall {
                     }
                     return data;
                 } catch (Exception e) {
-                    Log.d("Background Task", e.toString());
+                    e.printStackTrace();
                 }
                 return data;
             }
@@ -62,6 +68,7 @@ public class DirectionApiCall {
             }
         }
 
+        //AsyncTask execution trigger.
         new DownloadTask().execute(url);
 
     }

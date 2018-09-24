@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">UberAppDemo</string>
+
     <string name="title_activity_google_map">Map</string>
+    <string name="source">Source</string>
+    <string name="destination">Destination</string>
+    <string name="notification_title">UberAppDemo</string>
+    <string name="notification_msg">You have reached destination successfully.</string>
+    <string name="lat">lat</string>
+    <string name="lng">lng</string>
+    <string name="error_direction_api">Couldn\'t get the data from an API.</string>
 </resources>

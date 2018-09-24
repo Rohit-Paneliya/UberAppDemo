@@ -1,54 +1,58 @@
-package rohit.com.uberappdemo;
+package rohit.com.uberappdemo.utility;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.maps.android.PolyUtil;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import rohit.com.uberappdemo.data.DirectionApiResponse;
+
+import static rohit.com.uberappdemo.utility.Constants.LAT;
+import static rohit.com.uberappdemo.utility.Constants.LEGS;
+import static rohit.com.uberappdemo.utility.Constants.LNG;
+import static rohit.com.uberappdemo.utility.Constants.POINTS;
+import static rohit.com.uberappdemo.utility.Constants.POLYLINE;
+import static rohit.com.uberappdemo.utility.Constants.ROUTES;
+import static rohit.com.uberappdemo.utility.Constants.STEPS;
+import static rohit.com.uberappdemo.utility.Constants.URL_DIRECTION_API;
+
 public class MapUtil {
 
+    /*
+     *   This function is used to generate the getDirectionAPI URL.
+     * */
     public static String getDirectionsUrl(LatLng origin, LatLng dest) {
 
         // Origin of route
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String strOrigin = "origin=" + origin.latitude + "," + origin.longitude;
 
         // Destination of route
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String strDestination = "destination=" + dest.latitude + "," + dest.longitude;
 
-        // Sensor enabled
         String sensor = "sensor=false";
         String mode = "mode=driving";
         // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode;
+        //String parameters = strOrigin + "&" + strDestination + "&" + sensor + "&" + mode;
+        String parameters = strOrigin + "&" + strDestination;
 
         // Output format
         String output = "json";
 
         // Building the url to the web service
-        //return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
-        return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=";
+        return URL_DIRECTION_API + output + "?" + parameters;
     }
 
-    public static List<List<HashMap<String, String>>> parseToJSON(String result) {
-        JSONObject jObject;
-        List<List<HashMap<String, String>>> routes = null;
-
-        try {
-            jObject = new JSONObject(result);
-            DirectionsJSONParser parser = new DirectionsJSONParser();
-
-            routes = parser.parse(jObject);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return routes;
-    }
-
+    /*
+     *   This function is used to change the direction of Car.
+     * */
     public static float getBearing(LatLng begin, LatLng end) {
         double lat = Math.abs(begin.latitude - end.latitude);
         double lng = Math.abs(begin.longitude - end.longitude);
